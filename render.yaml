@@ -1,10 +1,10 @@
 databases:
-  # PostgreSQL Database
+  # PostgreSQL Database (PostgreSQL 16)
+  # If you already have a database, make sure the name matches your existing database name
   - name: exec-connect-db
     plan: free
     region: oregon
     databaseName: exec_connect
-    postgresMajorVersion: 15
 
 services:
   # Frontend Web Service
