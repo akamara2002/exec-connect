@@ -18,21 +18,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const challengeOptions: { label: string; value: OperationalChallenge }[] = [
   { label: "Scaling operations to meet demand", value: "scaling_operations" },
-  { label: "Supply chain inefficiencies", value: "supply_chain_inefficiencies" },
+  {
+    label: "Supply chain inefficiencies",
+    value: "supply_chain_inefficiencies",
+  },
   { label: "Quality assurance and control", value: "quality_assurance" },
-  { label: "Workforce productivity and management", value: "workforce_productivity" },
-  { label: "Process standardization and documentation", value: "process_standardization" },
+  {
+    label: "Workforce productivity and management",
+    value: "workforce_productivity",
+  },
+  {
+    label: "Process standardization and documentation",
+    value: "process_standardization",
+  },
   { label: "Digital transformation adoption", value: "digital_transformation" },
 ];
 
 const opsSystemsOptions: { label: string; value: OpsManagementSystems }[] = [
   { label: "Yes, custom-built solutions", value: "custom_built" },
-  { label: "Yes, off-the-shelf software (SAP, Oracle, etc.)", value: "off_the_shelf" },
+  {
+    label: "Yes, off-the-shelf software (SAP, Oracle, etc.)",
+    value: "off_the_shelf",
+  },
   { label: "Partial use of systems", value: "partial_use" },
   { label: "No formal operational systems", value: "no_formal_systems" },
 ];
@@ -57,14 +75,20 @@ const costOverrunOptions: { label: string; value: CostOverrunType }[] = [
   { label: "Other", value: "other" },
 ];
 
-const vendorManagementOptions: { label: string; value: VendorManagementMaturity }[] = [
+const vendorManagementOptions: {
+  label: string;
+  value: VendorManagementMaturity;
+}[] = [
   { label: "Fully managed with KPIs and contracts", value: "fully_managed" },
   { label: "Partially managed", value: "partially_managed" },
   { label: "No formal vendor management", value: "no_formal_management" },
 ];
 
 const workforceDevOptions: { label: string; value: WorkforceDevelopment }[] = [
-  { label: "Continuous training and reskilling programs", value: "continuous_training" },
+  {
+    label: "Continuous training and reskilling programs",
+    value: "continuous_training",
+  },
   { label: "Ad-hoc training only", value: "ad_hoc_training" },
   { label: "None currently", value: "none" },
 ];
@@ -100,27 +124,31 @@ export function DiagnosticForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
-  const nextStep = () => setStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const nextStep = () =>
+    setStep((prev) => Math.min(prev + 1, steps.length - 1));
   const previousStep = () => setStep((prev) => Math.max(prev - 1, 0));
 
   const handleSubmit = async () => {
     // Basic validation
-    if (!formData.biggest_operational_challenge || 
-        !formData.ops_management_systems ||
-        !formData.kpi_tracking_method ||
-        !formData.has_documented_sops ||
-        formData.cost_overruns.length === 0 ||
-        !formData.vendor_management_maturity ||
-        !formData.operational_efficiency_rating ||
-        formData.workforce_development.length === 0 ||
-        formData.ops_team_size === 0 ||
-        formData.monthly_output_units.some(v => v === 0) ||
-        formData.monthly_ops_costs.some(v => v === 0)) {
+    if (
+      !formData.biggest_operational_challenge ||
+      !formData.ops_management_systems ||
+      !formData.kpi_tracking_method ||
+      !formData.has_documented_sops ||
+      formData.cost_overruns.length === 0 ||
+      !formData.vendor_management_maturity ||
+      !formData.operational_efficiency_rating ||
+      formData.workforce_development.length === 0 ||
+      formData.ops_team_size === 0 ||
+      (formData.monthly_output_units !== undefined &&
+        formData.monthly_output_units.some((v) => v === 0)) ||
+      (formData.monthly_ops_costs !== undefined &&
+        formData.monthly_ops_costs.some((v) => v === 0))
+    ) {
       setError("Please fill in all required fields");
       return;
     }
-    
+
     try {
       setLoading(true);
       setError(null);
@@ -146,7 +174,8 @@ export function DiagnosticForm() {
                 onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    biggest_operational_challenge: value as OperationalChallenge,
+                    biggest_operational_challenge:
+                      value as OperationalChallenge,
                   }))
                 }
               >
@@ -163,7 +192,9 @@ export function DiagnosticForm() {
               </Select>
             </div>
             <div>
-              <Label>2. Do you currently use any operational management systems? *</Label>
+              <Label>
+                2. Do you currently use any operational management systems? *
+              </Label>
               <Select
                 value={formData.ops_management_systems || ""}
                 onValueChange={(value) =>
@@ -209,7 +240,10 @@ export function DiagnosticForm() {
               </Select>
             </div>
             <div>
-              <Label>4. Do you have standard operating procedures (SOPs) documented? *</Label>
+              <Label>
+                4. Do you have standard operating procedures (SOPs) documented?
+                *
+              </Label>
               <Select
                 value={formData.has_documented_sops || ""}
                 onValueChange={(value) =>
@@ -237,14 +271,20 @@ export function DiagnosticForm() {
         return (
           <div className="space-y-6">
             <div>
-              <Label>5. Where are your largest cost overruns currently occurring? *</Label>
+              <Label>
+                5. Where are your largest cost overruns currently occurring? *
+              </Label>
               <Select
                 value={formData.cost_overruns[0] || ""}
                 onValueChange={(value) => {
                   setFormData((prev) => ({
                     ...prev,
-                    cost_overruns: value === "other" ? ["other"] : [value as CostOverrunType],
-                    cost_overruns_other: value === "other" ? prev.cost_overruns_other : null,
+                    cost_overruns:
+                      value === "other"
+                        ? ["other"]
+                        : [value as CostOverrunType],
+                    cost_overruns_other:
+                      value === "other" ? prev.cost_overruns_other : null,
                   }));
                 }}
               >
@@ -275,13 +315,17 @@ export function DiagnosticForm() {
               )}
             </div>
             <div>
-              <Label>6. How mature is your vendor management and outsourcing strategy? *</Label>
+              <Label>
+                6. How mature is your vendor management and outsourcing
+                strategy? *
+              </Label>
               <Select
                 value={formData.vendor_management_maturity || ""}
                 onValueChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    vendor_management_maturity: value as VendorManagementMaturity,
+                    vendor_management_maturity:
+                      value as VendorManagementMaturity,
                   }))
                 }
               >
@@ -298,13 +342,19 @@ export function DiagnosticForm() {
               </Select>
             </div>
             <div>
-              <Label>7. Rate your operational efficiency on a scale of 1 to 5 *</Label>
+              <Label>
+                7. Rate your operational efficiency on a scale of 1 to 5 *
+              </Label>
               <div className="mt-2 flex gap-2">
                 {[1, 2, 3, 4, 5].map((rating) => (
                   <Button
                     key={rating}
                     type="button"
-                    variant={formData.operational_efficiency_rating === rating ? "default" : "outline"}
+                    variant={
+                      formData.operational_efficiency_rating === rating
+                        ? "default"
+                        : "outline"
+                    }
                     onClick={() =>
                       setFormData((prev) => ({
                         ...prev,
@@ -329,32 +379,39 @@ export function DiagnosticForm() {
             <div>
               <Label>8. Monthly Output Units (Last 3 months) *</Label>
               <div className="space-y-2 mt-2">
-                {formData.monthly_output_units.map((val, idx) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <Label className="w-24 text-sm">Month {idx + 1}:</Label>
-                    <Input
-                      type="number"
-                      value={val === 0 ? "" : val}
-                      onChange={(e) => {
-                        const newUnits = [...formData.monthly_output_units];
-                        newUnits[idx] = parseInt(e.target.value) || 0;
-                        setFormData({ ...formData, monthly_output_units: newUnits });
-                      }}
-                      onFocus={(e) => {
-                        if (e.target.value === "0") {
-                          e.target.value = "";
-                        }
-                      }}
-                      placeholder="Units"
-                    />
-                  </div>
-                ))}
+                {(formData.monthly_output_units || [0, 0, 0]).map(
+                  (val, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <Label className="w-24 text-sm">Month {idx + 1}:</Label>
+                      <Input
+                        type="number"
+                        value={val === 0 ? "" : val}
+                        onChange={(e) => {
+                          const newUnits = [
+                            ...(formData.monthly_output_units || [0, 0, 0]),
+                          ];
+                          newUnits[idx] = parseInt(e.target.value) || 0;
+                          setFormData({
+                            ...formData,
+                            monthly_output_units: newUnits,
+                          });
+                        }}
+                        onFocus={(e) => {
+                          if (e.target.value === "0") {
+                            e.target.value = "";
+                          }
+                        }}
+                        placeholder="Units"
+                      />
+                    </div>
+                  )
+                )}
               </div>
             </div>
             <div>
               <Label>9. Monthly Operational Costs (Last 3 months) *</Label>
               <div className="space-y-2 mt-2">
-                {formData.monthly_ops_costs.map((val, idx) => (
+                {(formData.monthly_ops_costs || [0, 0, 0]).map((val, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <Label className="w-24 text-sm">Month {idx + 1}:</Label>
                     <Input
@@ -362,9 +419,14 @@ export function DiagnosticForm() {
                       step="0.01"
                       value={val === 0 ? "" : val}
                       onChange={(e) => {
-                        const newCosts = [...formData.monthly_ops_costs];
+                        const newCosts = [
+                          ...(formData.monthly_ops_costs || [0, 0, 0]),
+                        ];
                         newCosts[idx] = parseFloat(e.target.value) || 0;
-                        setFormData({ ...formData, monthly_ops_costs: newCosts });
+                        setFormData({
+                          ...formData,
+                          monthly_ops_costs: newCosts,
+                        });
                       }}
                       onFocus={(e) => {
                         if (e.target.value === "0") {
@@ -381,7 +443,9 @@ export function DiagnosticForm() {
               <Label>10. Operational Team Size *</Label>
               <Input
                 type="number"
-                value={formData.ops_team_size === 0 ? "" : formData.ops_team_size}
+                value={
+                  formData.ops_team_size === 0 ? "" : formData.ops_team_size
+                }
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -402,7 +466,10 @@ export function DiagnosticForm() {
         return (
           <div className="space-y-6">
             <div>
-              <Label>11. What workforce development initiatives do you have in place? *</Label>
+              <Label>
+                11. What workforce development initiatives do you have in place?
+                *
+              </Label>
               <Select
                 value={formData.workforce_development[0] || ""}
                 onValueChange={(value) => {
@@ -425,11 +492,16 @@ export function DiagnosticForm() {
               </Select>
             </div>
             <div>
-              <Label>12. Are sustainability or regulatory compliance considerations part of your operational strategy? *</Label>
+              <Label>
+                12. Are sustainability or regulatory compliance considerations
+                part of your operational strategy? *
+              </Label>
               <div className="mt-3 flex gap-4">
                 <Button
                   type="button"
-                  variant={formData.sustainability_compliance ? "default" : "outline"}
+                  variant={
+                    formData.sustainability_compliance ? "default" : "outline"
+                  }
                   onClick={() =>
                     setFormData((prev) => ({
                       ...prev,
@@ -441,7 +513,9 @@ export function DiagnosticForm() {
                 </Button>
                 <Button
                   type="button"
-                  variant={!formData.sustainability_compliance ? "default" : "outline"}
+                  variant={
+                    !formData.sustainability_compliance ? "default" : "outline"
+                  }
                   onClick={() =>
                     setFormData((prev) => ({
                       ...prev,
@@ -490,22 +564,13 @@ export function DiagnosticForm() {
           </div>
         )}
         <div className="flex items-center justify-between pt-4 border-t">
-          <Button 
-            variant="ghost" 
-            onClick={previousStep} 
-            disabled={step === 0}
-          >
+          <Button variant="ghost" onClick={previousStep} disabled={step === 0}>
             Back
           </Button>
           {step < steps.length - 1 ? (
-            <Button onClick={nextStep}>
-              Next
-            </Button>
+            <Button onClick={nextStep}>Next</Button>
           ) : (
-            <Button 
-              onClick={handleSubmit} 
-              disabled={loading}
-            >
+            <Button onClick={handleSubmit} disabled={loading}>
               {loading ? "Analyzing..." : "Submit Diagnostic"}
             </Button>
           )}

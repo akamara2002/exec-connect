@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ctoApi } from "@/lib/api";
-import type { ChatMessage } from "@/lib/types";
+import type { ChatMessage } from "@/lib/types-cto";
 import { Send, Loader2, Bot, User } from "lucide-react";
 
 export function ChatInterface() {
@@ -78,9 +78,12 @@ export function ChatInterface() {
           {messages.length === 0 && (
             <div className="text-center text-muted-foreground py-8">
               <Bot className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-              <p className="text-lg font-medium mb-2">Ask me anything about technology strategy</p>
+              <p className="text-lg font-medium mb-2">
+                Ask me anything about technology strategy
+              </p>
               <p className="text-sm">
-                I can help with infrastructure, security, DevOps, team structure, and more.
+                I can help with infrastructure, security, DevOps, team
+                structure, and more.
               </p>
             </div>
           )}
@@ -144,4 +147,3 @@ export function ChatInterface() {
     </Card>
   );
 }
-

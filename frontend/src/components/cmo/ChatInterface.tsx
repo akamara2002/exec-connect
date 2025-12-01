@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/api";
-import { ChatMessage } from "@/lib/types";
+import type { ChatMessage } from "@/lib/types-cmo";
 import { Send, Loader2 } from "lucide-react";
 
 export function ChatInterface() {

@@ -1,8 +1,27 @@
 /** TypeScript types matching backend schemas. */
-// Re-export types from other modules for convenience
-export * from "./types-cmo";
-export * from "./types-coo";
-export * from "./types-cto";
+// Re-export non-conflicting types from agent-specific modules
+export type { CMOInput, CMOAnalysisResponse, CMOAnalysis, ChatRequest as CMOChatRequest, ChatResponse as CMOChatResponse, PaginatedResponse } from "./types-cmo";
+export type { 
+  COOInput, 
+  COOAnalysisOut, 
+  ChatMessage as COOChatMessage, 
+  ChatResponse as COOChatResponse,
+  OperationalChallenge,
+  OpsManagementSystems,
+  KPITrackingMethod,
+  SOPCoverage,
+  CostOverrunType,
+  VendorManagementMaturity,
+  WorkforceDevelopment,
+  BusinessModel,
+  LegacyKPITracking,
+  RiskLevel
+} from "./types-coo";
+export type { CTOInput, CTOAnalysis, CTOAnalysisResponse, ChatMessage as CTOChatMessage, ChatRequest as CTOChatRequest, ActionPlan as CTOActionPlan, ActionPlanItem, Risk, Recommendation } from "./types-cto";
+// Note: ChatMessage exists in multiple modules, so import directly:
+// - CMO: ChatMessage from "./types-cmo"
+// - COO: ChatMessage from "./types-coo"  
+// - CTO: ChatMessage from "./types-cto"
 
 export interface CFOInput {
   biggest_challenge: string;
