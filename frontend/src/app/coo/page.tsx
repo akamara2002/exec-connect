@@ -1,0 +1,37 @@
+import Link from "next/link";
+
+export default function COOPage() {
+  return (
+    <div className="container mx-auto p-8">
+      <h1 className="text-3xl font-bold mb-6">AI-COO</h1>
+      <p className="text-gray-600 mb-8">Operational efficiency and processes for your business.</p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Link
+          href="/coo/diagnostic"
+          className="block p-6 border border-gray-300 rounded-lg hover:shadow-lg transition-shadow"
+        >
+          <h2 className="text-xl font-semibold mb-2">Run Diagnostic</h2>
+          <p className="text-gray-600">Assess your operational efficiency</p>
+        </Link>
+        
+        <Link
+          href="/coo/chat"
+          className="block p-6 border border-gray-300 rounded-lg hover:shadow-lg transition-shadow"
+        >
+          <h2 className="text-xl font-semibold mb-2">Chat with AI-COO</h2>
+          <p className="text-gray-600">Ask operational questions</p>
+        </Link>
+        
+        <Link
+          href="/coo/analysis"
+          className="block p-6 border border-gray-300 rounded-lg hover:shadow-lg transition-shadow"
+        >
+          <h2 className="text-xl font-semibold mb-2">View Analyses</h2>
+          <p className="text-gray-600">See past analyses</p>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
