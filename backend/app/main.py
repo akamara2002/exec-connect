@@ -34,19 +34,78 @@ async def lifespan(app: FastAPI):
     print(f"OpenAI Model: {settings.LLM_MODEL}")
     print(f"RAG Enabled: {settings.RAG_ENABLED}")
     
-    # Initialize pgvector extension
-    try:
-        init_pgvector_extension()
-    except Exception as e:
-        print(f"Warning: pgvector extension initialization failed: {e}")
-    
-    # Test database connection
+    # Test database connection first
     try:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
         print("✓ Database connection successful")
     except Exception as e:
         print(f"✗ Database connection failed: {e}")
+        raise  # Fail startup if database is not accessible
+    
+    # Initialize pgvector extension (needed before migrations)
+    try:
+        init_pgvector_extension()
+        print("✓ pgvector extension initialized")
+    except Exception as e:
+        print(f"Warning: pgvector extension initialization failed: {e}")
+    
+    # Run database migrations
+    try:
+        print("Running database migrations...")
+        import os
+        import sys
+        from pathlib import Path
+        from alembic.config import Config
+        from alembic import command
+        
+        # Find alembic.ini - try multiple locations
+        # On Render with rootDir=backend, we're already in backend/
+        # Locally or from repo root, we need to find backend/
+        current_dir = Path.cwd()
+        possible_paths = [
+            current_dir / "alembic.ini",  # Already in backend/
+            current_dir / "backend" / "alembic.ini",  # In repo root
+            Path(__file__).resolve().parent.parent / "alembic.ini",  # From app/main.py
+        ]
+        
+        alembic_ini_path = None
+        backend_dir = None
+        
+        for path in possible_paths:
+            if path.exists():
+                alembic_ini_path = path
+                backend_dir = path.parent
+                break
+        
+        if not alembic_ini_path:
+            print(f"Warning: Could not find alembic.ini. Tried: {possible_paths}")
+        else:
+            print(f"Found alembic.ini at: {alembic_ini_path}")
+            # Change to backend directory for alembic to work correctly
+            original_cwd = os.getcwd()
+            backend_path = str(backend_dir)
+            try:
+                os.chdir(backend_dir)
+                print(f"Changed working directory to: {backend_dir}")
+                
+                # Add backend directory to sys.path if not already there
+                if backend_path not in sys.path:
+                    sys.path.insert(0, backend_path)
+                
+                alembic_cfg = Config(str(alembic_ini_path))
+                command.upgrade(alembic_cfg, "head")
+                print("✓ Database migrations completed")
+            finally:
+                os.chdir(original_cwd)
+                if backend_path in sys.path:
+                    sys.path.remove(backend_path)
+    except Exception as e:
+        import traceback
+        print(f"✗ Database migration failed: {e}")
+        print(traceback.format_exc())
+        # Don't fail startup - allow the app to run even if migrations fail
+        # (useful for troubleshooting, but logs will show the error)
     
     yield
     
